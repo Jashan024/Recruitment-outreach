@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recruitment Outreach — Automated SMS Outreach Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --white: #ffffff;
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --border: #e2e2e5;
+      --black: #111111;
+      --text: #111111;
+      --text-2: #555555;
+      --text-3: #888888;
+      --accent: #111111;
+      --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ───────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .nav-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--black);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 1px;
+    }
+
+    .nav-name {
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .nav-download {
+      padding: 10px 24px;
+      background: var(--black);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font);
+      font-weight: 600;
+      font-size: 13px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .nav-download:hover { opacity: 0.8; }
+
+    /* ── HERO ──────────────────────────────────── */
+    .hero {
+      padding: 160px 40px 100px;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: #f0f0f2;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-2);
+      margin-bottom: 32px;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      background: var(--black);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 28px;
+      letter-spacing: 2px;
+      margin: 0 auto 32px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    }
+
+    .hero h1 {
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: var(--text-2);
+      line-height: 1.6;
+      max-width: 560px;
+      margin: 0 auto 40px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      padding: 16px 36px;
+      background: var(--black);
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: 16px;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    .btn-primary svg { width: 18px; height: 18px; }
+
+    .hero-meta {
+      font-size: 13px;
+      color: var(--text-3);
+    }
+
+    /* ── FEATURES ──────────────────────────────── */
+    .features {
+      padding: 80px 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .features-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .features-header h2 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+
+    .features-header p {
+      font-size: 16px;
+      color: var(--text-2);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 32px 28px;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    .feature-card:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: #f4f4f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
+
+    .feature-card h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
+
+    /* ── HOW IT WORKS ─────────────────────────── */
+    .how-it-works {
+      padding: 80px 40px;
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .how-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .how-inner h2 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 48px;
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      text-align: left;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .step-num {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      border-radius: 10px;
+      background: var(--black);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .step-text h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .step-text p {
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.5;
+    }
+
+    /* ── REQUIREMENTS ─────────────────────────── */
+    .requirements {
+      padding: 80px 40px;
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .requirements h2 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 32px;
+    }
+
+    .req-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .req-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      color: var(--text-2);
+      justify-content: center;
+    }
+
+    .req-list li svg {
+      width: 18px;
+      height: 18px;
+      color: var(--black);
+      flex-shrink: 0;
+    }
+
+    /* ── CTA ──────────────────────────────────── */
+    .cta {
+      padding: 80px 40px;
+      text-align: center;
+      background: var(--black);
+      color: var(--white);
+    }
+
+    .cta h2 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+    }
+
+    .cta p {
+      font-size: 16px;
+      opacity: 0.6;
+      margin-bottom: 32px;
+    }
+
+    .btn-white {
+      padding: 16px 36px;
+      background: var(--white);
+      color: var(--black);
+      border: none;
+      border-radius: 10px;
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: 16px;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-white:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    /* ── FOOTER ───────────────────────────────── */
+    footer {
+      padding: 32px 40px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-3);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── RESPONSIVE ───────────────────────────── */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .hero { padding: 130px 20px 60px; }
+      .hero h1 { font-size: 32px; }
+      .hero p { font-size: 16px; }
+      .features { padding: 60px 20px; }
+      .features-header h2 { font-size: 28px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .how-it-works { padding: 60px 20px; }
+      .how-inner h2 { font-size: 28px; }
+      .requirements { padding: 60px 20px; }
+      .cta { padding: 60px 20px; }
+      .cta h2 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <a href="#" class="nav-brand">
+      <div class="nav-logo">RO</div>
+      <span class="nav-name">Recruitment Outreach</span>
+    </a>
+    <a href="https://github.com/Jashan024/browser-automation/releases/download/v1.0.0/Recruitment.Outreach.Setup.1.0.0.exe" class="nav-download">Download for Windows</a>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">v1.0.0 &mdash; Windows</div>
+    <div class="hero-logo">RO</div>
+    <h1>Automate your recruitment outreach</h1>
+    <p>Send personalized SMS messages to candidates at scale. Track everything in Google Sheets. Smart follow-ups that never bother people who already replied.</p>
+    <div class="hero-actions">
+      <a href="https://github.com/Jashan024/browser-automation/releases/download/v1.0.0/Recruitment.Outreach.Setup.1.0.0.exe" class="btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download for Windows
+      </a>
+      <span class="hero-meta">93 MB &middot; Windows 10+</span>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features">
+    <div class="features-header">
+      <h2>Everything you need for SMS outreach</h2>
+      <p>Built for recruitment teams who want to reach more candidates in less time.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">&#128172;</div>
+        <h3>RingCentral SMS Automation</h3>
+        <p>Automatically send initial messages and follow-ups through RingCentral. No manual typing needed.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128202;</div>
+        <h3>Google Sheets Tracking</h3>
+        <p>Live status updates in your spreadsheet. Every message sent, every reply detected, every follow-up tracked.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128161;</div>
+        <h3>Smart Reply Detection</h3>
+        <p>Reads conversation history to detect replies. If a candidate responded, they won't be messaged again.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128337;</div>
+        <h3>Timed Follow-ups</h3>
+        <p>Set custom delays between follow-ups. The tool respects your timing rules automatically.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how-it-works">
+    <div class="how-inner">
+      <h2>Get started in minutes</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text">
+            <h3>Download &amp; Install</h3>
+            <p>Download the installer, run it, and enter the access code provided to you.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text">
+            <h3>Connect your accounts</h3>
+            <p>Log into Google Sheets and RingCentral inside the app. Open your candidate spreadsheet.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text">
+            <h3>Configure your campaign</h3>
+            <p>Write your initial message and follow-ups. Set the delay between each. Choose the spreadsheet tab.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text">
+            <h3>Launch &amp; relax</h3>
+            <p>Hit Start Campaign. The tool processes each candidate row automatically and updates the sheet in real time.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Requirements -->
+  <section class="requirements">
+    <h2>System Requirements</h2>
+    <ul class="req-list">
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Windows 10 or later
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Internet connection
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Google Sheets account
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        RingCentral account
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Access code (provided by your admin)
+      </li>
+    </ul>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <h2>Ready to automate your outreach?</h2>
+    <p>Download now and start reaching more candidates today.</p>
+    <a href="https://github.com/Jashan024/browser-automation/releases/download/v1.0.0/Recruitment.Outreach.Setup.1.0.0.exe" class="btn-white">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Download for Windows
+    </a>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    Recruitment Outreach v1.0.0 &middot; Built by Hire'in Solutions
+  </footer>
+
+</body>
+</html>
